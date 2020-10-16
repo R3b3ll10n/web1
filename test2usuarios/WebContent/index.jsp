@@ -12,10 +12,14 @@
 		<table>
 			<tr>
 				<td>Nombre</td>
-				<td><input type="text" name="user"></td>
+				<td><input type="text" name="name"></td>
 			</tr>
 			<tr>
-				<td>PASSWORD</td>
+				<td>Apellido</td>
+				<td><input type="text" name="lastname"></td>
+			</tr>
+			<tr>
+				<td>Password</td>
 				<td><input type="text" name="password"></td>
 			</tr>
 			<tr>

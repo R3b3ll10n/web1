@@ -48,22 +48,25 @@ public class Servlet extends HttpServlet {
 			Conexion aux = new Conexion();
 			Connection con = aux.conectar();
 			
-			String query = "INSERT INTO USUARIOS VALUES(?,?)";
+			String query = "INSERT INTO registros_usuarios (name, lastname, password) VALUES (?,?,?)";
+			
 			PreparedStatement pst = con.prepareStatement(query);
-			if(request.getParameter("user") != "" || request.getParameter("password") != "")
-			{		
-				pst.setString(1, request.getParameter("user"));
-				pst.setString(2, request.getParameter("password"));
-				pst.execute();
-				con.close();
-				response.sendRedirect("http://localhost:8080/test2usuarios/index.jsp");
-			}else {
-				respuesta(response, "te has olvidado de un campo");
-			}
+			pst.setString(1, request.getParameter("name"));
+			pst.setString(2, request.getParameter("lastname"));
+			pst.setString(3, request.getParameter("password"));
+			
+			pst.execute();
+			con.close();
+			PrintWriter out = response.getWriter();
+			out.println("<html>"
+					+ "<body><h1>Successfully inserted</h1></body>"
+					+ "<html>");
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	protected void respuesta(HttpServletResponse respuesta, String msg) throws IOException {
 		PrintWriter out = respuesta.getWriter();
