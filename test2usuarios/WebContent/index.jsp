@@ -7,11 +7,11 @@
 <title>formulario</title>
 </head>
 <body>
-	<h1>registrate</h1>
+	<h1>Insertar usuario</h1>
 	<form action="./Servlet" method="post">
 		<table>
 			<tr>
-				<td>NAME USER</td>
+				<td>Nombre</td>
 				<td><input type="text" name="user"></td>
 			</tr>
 			<tr>
