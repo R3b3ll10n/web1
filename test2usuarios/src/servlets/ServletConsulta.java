@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+/* NO FUNCIONA, LO SUBO POR SI ACASO */
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -15,16 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 import connectMysql.Conexion;
 
 /**
- * Servlet implementation class Servlet
+ * Servlet implementation class ServletConsulta
  */
-@WebServlet("/Servlet")
-public class Servlet extends HttpServlet {
+@WebServlet("/ServletConsulta")
+public class ServletConsulta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet() {
+    public ServletConsulta() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,7 +50,55 @@ public class Servlet extends HttpServlet {
 		try {
 			Conexion aux = new Conexion();
 			Connection con = aux.conectar();
+			//Statement stmt = null;
+
+			ResultSet rs = null;
 			
+			String name = request.getParameter("nameConsulta");
+			String lastname = request.getParameter("lastnameConsulta");
+			String password = request.getParameter("passwordConsulta");
+			
+			String query = "Select count (name, lastname, password) from registros_usuarios where name='"+name+"' and lastname='"+lastname+"' AND password='"+password+"' ";
+
+
+			PreparedStatement pst = con.prepareStatement(query);
+			
+			rs = pst.executeQuery();
+			
+			/*
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM registros_usuarios WHERE name="+name+);*/
+			
+			while(rs.next()){ 
+				if(rs.getInt(1) != 1) {
+					PrintWriter out = response.getWriter();
+					out.println("<html>"
+							+ "<body><h1>FALLO, este usuario o contraseña no coincide.</h1></body>"
+
+							+ "</html>");
+				}else{
+					PrintWriter out = response.getWriter();
+					out.println("<html>"
+							+ "<body><h1>Usuario correcto.</h1></body>"
+							+ "</html>");
+					System.out.println("name="+rs.getObject("name")+
+						      ", lastname="+rs.getObject("lastname")+
+						      ", password="+rs.getObject("password"));
+				}
+			}
+			/*
+			
+			while (rs.next())
+			{
+			   System.out.println("name="+rs.getObject("name")+
+			      ", lastname="+rs.getObject("lastname")+
+			      ", password="+rs.getObject("password"));
+			}
+	*/
+			
+			rs.close();
+			
+			/*
 			String query = "INSERT INTO registros_usuarios (name, lastname, password) VALUES (?,?,?)";
 			
 			PreparedStatement pst = con.prepareStatement(query);
@@ -57,25 +108,17 @@ public class Servlet extends HttpServlet {
 			
 			pst.execute();
 			con.close();
-			PrintWriter out = response.getWriter();
+			*/
+			/*PrintWriter out = response.getWriter();
 			out.println("<html>"
-					+ "<body><p><h1>Successfully inserted</h1></p>"
+					+ "<body><p><h1>Exito en la insercion</h1></p>"
 					+ "<p><a href='/test2usuarios/index.jsp'>Volver</a></body>"
 					+ "<html>");
-			
+			*/
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
-	protected void respuesta(HttpServletResponse respuesta, String msg) throws IOException {
-		PrintWriter out = respuesta.getWriter();
-		out.println("<html>");
-		out.println("<body>");
-		out.println("<h1>"+msg+"</h1>");
-		out.println("</body");
-		out.println("</html>");
 	}
 
 }
